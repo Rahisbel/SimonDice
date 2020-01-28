@@ -35,7 +35,7 @@ body{
 	background: #663399;
 }
 
-.violeta-claro{
+.violeta.claro{
 	background: #9370DB;
 }
 
@@ -43,7 +43,7 @@ body{
 	background: #32CD32;
 }
 
-.verde-claro{
+.verde.claro{
 	background: #98FB98;
 }
 
@@ -51,7 +51,7 @@ body{
 	background: #40E0D0;
 }
 
-.azul-claro{
+.azul.claro{
 	background: #AFEEEE;
 }
 
@@ -59,7 +59,7 @@ body{
 	background: #DC143C;
 }
 
-.rosa-claro{
+.rosa.claro{
 	background: #FF69B4;
 }
 
