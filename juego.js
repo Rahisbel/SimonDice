@@ -3,6 +3,7 @@ const azul = document.getElementById('azul')
 const violeta = document.getElementById('violeta')
 const rosa = document.getElementById('rosa')
 const verde = document.getElementById('verde')
+const ULTIMO_NIVEL = 10
 
 btnEmpezar.addEventListener('click',function(){
 	empezarJuego()
@@ -13,11 +14,12 @@ class Juego{
 	constructor(){
 		this.inicializar()
 		this.generarSecuencia()
-		this.siguienteNivel()
+		setTimeout(this.siguienteNivel(),500)
 	}
 
 	inicializar(){
 		//el bind ata el this
+		this.siguienteNivel = this.siguienteNivel.bind(this)
 		this.elegirColor = this.elegirColor.bind(this)
 		btnEmpezar.classList.add('hide')
 		this.nivel = 1
@@ -30,24 +32,30 @@ class Juego{
 	}
 
 	generarSecuencia(){
-		this.secuencia = new Array(10).fill(0).map(n => Math.floor(Math.random()*4))
+		this.secuencia = new Array(ULTIMO_NIVEL).fill(0).map(n => Math.floor(Math.random()*4))
 	}
 
 	siguienteNivel(){
+		this.subnivel = 0
 		this.iluminarSecuencia()
 		this.agregarEventosClick()
 	}
 
 	transformarNumeroAColor(numero){
 		switch(numero){
-			case 0 : 
-				return 'azul'
-			case 1 : 
-				return 'violeta'
-			case 2 : 
-				return 'rosa'
-			case 3 : 
-				return 'verde'
+			case 0 : return 'azul'
+			case 1 : return 'violeta'
+			case 2 : return 'rosa'
+			case 3 : return 'verde'
+		}
+	}
+
+	transformarColorANumero(color){
+		switch(color){
+			case 'azul': return 0
+			case 'violeta': return 1
+			case 'rosa': return 2
+			case 'verde': return 3
 		}
 	}
 
@@ -60,7 +68,7 @@ class Juego{
 	} 
 
 	iluminarColor(color){
-		this.colores[color] .classList.add('claro')
+		this.colores[color].classList.add('claro')
 		setTimeout(() => this.apagarColor(color),350)
 	}
 
@@ -75,11 +83,35 @@ class Juego{
 		this.colores.verde.addEventListener('click',this.elegirColor)
 	}
 
+	eliminarEventosClick(){
+		this.colores.azul.removeEventListener('click',this.elegirColor)
+		this.colores.violeta.removeEventListener('click',this.elegirColor)
+		this.colores.rosa.removeEventListener('click',this.elegirColor)
+		this.colores.verde.removeEventListener('click',this.elegirColor)
+	}
+
 	elegirColor(ev){
 		//console.log(ev), target me indica cuál boton ha sido presionado
 		//console.log(this) boton al que se llama, dispara el evento. Para que tenga la misma funcionalidad que ev, se utiliza el .bind()
-
-			
+		const nombreColor = ev.target.dataset.color
+		const numeroColor = this.transformarColorANumero(nombreColor)
+		this.iluminarColor(nombreColor)
+		if(numeroColor === this.secuencia[this.subnivel]){
+			this.subnivel++
+			if(this.subnivel === this.nivel){
+				this.nivel++
+				this.eliminarEventosClick()
+				if(this.nivel === (ULTIMO_NIVEL+1)){
+					//ganó!
+				}
+				else{
+					setTimeout(this.siguienteNivel,1500)
+				}
+			}
+		}
+		else{
+			//perdió
+		}	
 	}
 
 
